@@ -1,0 +1,61 @@
+const express = require('express');
+const cors = require('cors');
+const path = require('path');
+
+const app = express();
+app.use(express.json());
+app.use(cors());
+
+// Serve frontend
+app.use(express.static(path.join(__dirname, 'frontend')));
+
+// In-memory storage for calls
+let calls = [];
+
+// Add a new call
+app.post('/calls', (req, res) => {
+  const call = {
+    id: Date.now(),
+    client: req.body.client,
+    number: req.body.number,
+    duration: req.body.duration, // in minutes
+    notes: req.body.notes || '',
+    outcome: req.body.outcome || 'pending',
+    date: new Date().toISOString()
+  };
+  calls.push(call);
+  res.json(call);
+});
+
+// Get all calls
+app.get('/calls', (req, res) => {
+  res.json(calls);
+});
+
+// Update a call
+app.put('/calls/:id', (req, res) => {
+  const call = calls.find(c => c.id == req.params.id);
+  if (call) {
+    Object.assign(call, req.body);
+    res.json(call);
+  } else {
+    res.status(404).send('Call not found');
+  }
+});
+
+// Productivity stats
+app.get('/stats', (req, res) => {
+  const totalCalls = calls.length;
+  const totalDuration = calls.reduce((sum, c) => sum + (c.duration || 0), 0);
+  const avgDuration = totalCalls ? (totalDuration / totalCalls) : 0;
+
+  res.json({
+    totalCalls,
+    totalDuration,
+    avgDuration
+  });
+});
+
+// Start server
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log(`DialMetrics running on port ${PORT}`));
