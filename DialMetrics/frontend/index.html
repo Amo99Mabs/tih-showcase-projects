@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>DialMetrics Dashboard</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>DialMetrics Dashboard</h1>
+
+  <section>
+    <h2>Log a Call</h2>
+    <form id="callForm">
+      <input type="text" id="agent" placeholder="Agent Name" required>
+      <input type="number" id="duration" placeholder="Duration (minutes)" required>
+      <input type="text" id="outcome" placeholder="Outcome" required>
+      <button type="submit">Add Call</button>
+    </form>
+  </section>
+
+  <section>
+    <h2>Call Logs</h2>
+    <table id="callTable">
+      <thead>
+        <tr>
+          <th>Agent</th><th>Duration</th><th>Outcome</th><th>Date</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>Stats</h2>
+    <p id="stats"></p>
+  </section>
+
+  <script src="app.js"></script>
+</body>
+</html>
